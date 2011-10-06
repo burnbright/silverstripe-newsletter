@@ -396,7 +396,7 @@ class NewsletterAdmin extends LeftAndMain {
 		} else {
 			$form = false;
 		}
-
+		$form->disableSecurityToken();
 		return $form;
 
 	}
@@ -955,8 +955,9 @@ JS;
 		$actions = new FieldSet(
 			new FormAction( "action_import", _t('NewsletterAdmin.SHOWCONTENTS','Show contents') )
 		);
-
-		return new RecipientImportField_UploadForm( $this, "UploadForm", $fields, $actions );
+		$form = new RecipientImportField_UploadForm( $this, "UploadForm", $fields, $actions );
+		$form->disableSecurityToken();
+		return $form;
 	}
 
 	function getMenuTitle() {
