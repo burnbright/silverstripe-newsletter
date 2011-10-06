@@ -20,7 +20,7 @@ class TrackingLinksEmail extends Extension {
 	 * @param NewsletterEmail
 	 */
 	function onBeforeSend(&$email) {
-		$this->addRecipientIdentifiers($email);
+		//$this->addRecipientIdentifiers($email);
 		$email->body->setValue($email->body->getValue().$this->WebBug($email)); //add web bug for open tracking
 	}
 
@@ -71,7 +71,6 @@ class TrackingLinksEmail extends Extension {
 
 				// replace the strings
 				$text = str_ireplace(array_keys($replacements), array_values($replacements), $text);
-
 				// replace the body
 				$output = new HTMLText();
 				$output->setValue($text);
@@ -88,7 +87,7 @@ class TrackingLinksEmail extends Extension {
 		if(!$email->body || !$email->recipient) return;
 		$text = $email->body->forTemplate();
 		$pattern = "/<a\s[^>]*href=\"([^\"]*)\"[^>]*>(.*)<\/a>/siU"; //TODO: this isn't quite right ...see email output
-		$replacement = "\1/".$email->recipient->ID;
+		$replacement = '\1/'.$email->recipient->ID;
 		$text = preg_replace($pattern,$replacement,$text);
 		$output = new HTMLText();
 		$output->setValue($text);
