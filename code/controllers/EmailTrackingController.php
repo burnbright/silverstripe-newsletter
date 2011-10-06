@@ -17,6 +17,7 @@ class EmailTrackingController extends ContentController {
 
 	function init() {
 		parent::init();
+		//TODO: introduce backwards-compatability for old link styles
 		//if $Action != 'link' or 'open'', then transfer it to 'link' for backwards compatibility
 	}
 

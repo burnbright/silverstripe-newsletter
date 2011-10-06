@@ -134,7 +134,7 @@ class Newsletter extends DataObject {
 	}
 
 	function getContentBody(){
-		$content = $this->obj('Content');
+		$content = $this->obj('Content')->forTemplate();
 
 		$this->extend("updateContentBody", $content);
 		return $content;
