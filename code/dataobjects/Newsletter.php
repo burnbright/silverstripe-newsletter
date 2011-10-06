@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Single newsletter instance.  Each {@link Newsletter} belongs to a {@link NewsletterType}. 
+ * Single newsletter instance.  Each {@link Newsletter} belongs to a {@link NewsletterType}.
  * @package newsletter
  */
 class Newsletter extends DataObject {
@@ -46,24 +46,24 @@ class Newsletter extends DataObject {
 				)
 			)
 		);
-		
+
 		if($this->Status != 'Draft') {
 			$roottabset->push($sentToTab = new Tab(_t('Newsletter.STATUSREPORT', 'Status Report'),
 				new LiteralField("SentStatusReport", $sentReport)
 			));
-			
+
 			$roottabset->push($trackTab = new Tab(_t('Newsletter.ANALYTICS', 'Analytics'),
 				new LiteralField("TrackedLinks", $trackedLinks)
 			));
-					
+
 			$mailTab->insertAfter( new ReadonlyField("SentDate", _t('Newsletter.SENTAT', 'Sent at'), $this->SentDate),'Subject');
-			
+
 		}
-		
+
 		$this->extend("updateCMSFields", $ret);
 		return $ret;
 	}
-	
+
 	/**
 	 * Only let recipients view newsletters by default.
 	 */
@@ -134,8 +134,8 @@ class Newsletter extends DataObject {
 	}
 
 	function getContentBody(){
-		$content = $this->obj('Content');
-		
+		$content = $this->obj('Content')->forTemplate();
+
 		$this->extend("updateContentBody", $content);
 		return $content;
 	}
@@ -153,37 +153,37 @@ class Newsletter extends DataObject {
 	    }
     	return $newsletter;
   	}
-	
+
 	function PreviewLink(){
 		return Controller::curr()->AbsoluteLink()."preview/".$this->ID;
 	}
-	
+
 	function Link(){
 		if($np = DataObject::get_one('NewslettersPage')){
 			return $np->Link('view')."/".$this->ID;
 		}
 		return NewslettersPage_Controller::$url_segment."/view/".$this->ID;
 	}
-	
-	/** 
-	 * Returns a list of all the {@link Newsletter_TrackedLink} objects attached 
-	 * to this newsletter and sorts them in desc order 
-	 * 
-	 * @return DataObjectSet|false 
-	 */ 
-	function NewsletterLinks() { 
-		$links = $this->TrackedLinks(); 
+
+	/**
+	 * Returns a list of all the {@link Newsletter_TrackedLink} objects attached
+	 * to this newsletter and sorts them in desc order
+	 *
+	 * @return DataObjectSet|false
+	 */
+	function NewsletterLinks() {
+		$links = $this->TrackedLinks();
  		if($links) {
-			$links->sort("\"Visits\"", "DESC"); 
-			return $links; 
-		} 
+			$links->sort("\"Visits\"", "DESC");
+			return $links;
+		}
 	}
-	
+
 	function Stats(){
-		
+
 		if($this->Status == 'Draft')
 			return array();
-					
+
 		$sent = $opened = $unopened = $bounced = $notsent = $unsubs = $clicks = 0;
 		$opened_p = $unopened_p = $bounced_p = 0;
 		if($recipients = $this->Recipients('Sent'))
@@ -195,20 +195,20 @@ class Newsletter extends DataObject {
 		}
 		if($or = $this->Recipients('Sent','"FirstOpened" IS NOT NULL'))
 			$opened = $or->Count();
-		
+
 		//TODO: bounced
 
 		$unopened = $sent - $opened;
-		
+
 		$opened_p = percent($opened,$sent);
 		$unopened_p = percent($unopened,$sent);
 		$bounced_p = percent($bounced,$sent);
 		$notsent = $this->UnsentSubscribers()->Count();
-		
-		$success_rate = percent(($opened - $bounced),$sent);
-		
 
-		
+		$success_rate = percent(($opened - $bounced),$sent);
+
+
+
 		return new ArrayData(array(
 			'Sent' => $sent,
 			'Opened' => $opened,
@@ -217,18 +217,18 @@ class Newsletter extends DataObject {
 			'NotSent' => $notsent,
 			'Unsubscribes' => $unsubs,
 			'Clicks' => $clicks,
-			
+
 			'OpenedPercent' => $opened_p,
 			'UnopenedPercent' => $unopened_p,
 			'BouncedPercent' => $bounced_p,
-			
+
 			'SuccessRate' => $success_rate
 			//clicks percent of total, clicks percent of opened
 		));
 	}
-	
 
-	
+
+
 }
 
 /**
@@ -244,21 +244,21 @@ class Newsletter_SentRecipient extends DataObject {
 	static $db = array(
 		"Email" => "Varchar(255)",
 		"Result" => "Enum('Sent,Bounced,Failed,BlackListed', 'Sent')",
-		
+
 		"Opens" => "Int",
 		"Clicks" => "Int",
-		
+
 		"FirstOpened" => "Datetime",
 		"LastOpened" => "Datetime",
-		
+
 		"IP" => "Varchar(50)",
 		"Agent" => "Varchar(255)"
 	);
 	static $has_one = array(
 		"Member" => "Member",
-		"Parent" => "Newsletter" 
+		"Parent" => "Newsletter"
 	);
-	
+
 	/**
 	 * Record that an email has been opened.
 	 */
@@ -272,7 +272,7 @@ class Newsletter_SentRecipient extends DataObject {
 		$this->Agent = $_SERVER['HTTP_USER_AGENT'];
 		$this->write();
 	}
-	
+
 	/**
 	 *  record link clicks for each recipient
 	 */
@@ -282,13 +282,13 @@ class Newsletter_SentRecipient extends DataObject {
 		$this->Clicks ++;
 		$this->write();
 	}
-	
+
 	function Status(){
 		if($this->Clicks) return "Actioned";
 		if($this->Opens) return "Opened";
 		return $this->Result;
 	}
-	
+
 }
 
 /**
@@ -297,17 +297,17 @@ class Newsletter_SentRecipient extends DataObject {
  * @package newsletter
  */
 class Newsletter_TrackedLink extends DataObject {
-	
+
 	static $db = array(
 		'Original' => 'Varchar(255)',
 		'Hash' => 'Varchar(100)',
 		'Visits' => 'Int'
 	);
-	
+
 	static $has_one = array(
 		'Newsletter' => 'Newsletter'
 	);
-	
+
 	/**
 	 * Generate a unique hash
 	 * @deprecated the TrackedLink ID is now used instead.
@@ -316,7 +316,7 @@ class Newsletter_TrackedLink extends DataObject {
 		parent::onBeforeWrite();
 		if(!$this->Hash) $this->Hash = md5(time() + rand());
 	}
-	
+
 	/**
 	 * Return the full link to the hashed url, not the
 	 * actual link location
@@ -326,9 +326,9 @@ class Newsletter_TrackedLink extends DataObject {
 	 */
 	function Link() {
 		if(!$this->Hash) $this->write();
-		return EmailTrackingController::$url_segment.'/'. $this->Hash;
+		return EmailTrackingController::generate_link_url($this->Hash,$this->recipient);
 	}
-	
+
 	/**
 	 * Record an individual link click.
 	 */

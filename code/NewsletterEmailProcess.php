@@ -25,7 +25,6 @@ class NewsletterEmailProcess extends BatchProcess {
 		$this->newsletter = $newsletter;
 		$this->nlType = $nlType;
 		$this->messageID = $messageID;
-
 		parent::__construct( $recipients );
 
 	}
@@ -88,7 +87,7 @@ class NewsletterEmailProcess extends BatchProcess {
 	        }
     	}
 
-	    return ($this->current >= count($this->objects)) ? $this->complete() : parent::next(); 
+	    return ($this->current >= count($this->objects)) ? $this->complete() : parent::next();
 	}
 
 	/**
@@ -98,12 +97,12 @@ class NewsletterEmailProcess extends BatchProcess {
 	 */
 	private function sendToAddress( $email, $address, $messageID = null, $member) {
 		$email->setTo( $address );
-		
+
 		// Log result of the send
 		$recipient = new Newsletter_SentRecipient();
 		$recipient->Email = $address;
 		$recipient->MemberID = $member->ID;
-		$recipient->Result = 'Sent'; 
+		$recipient->Result = 'Sent';
 		$recipient->ParentID = $this->newsletter->ID;
 		$recipient->write(); //save recipient before sending so that we can make use of the recipient data in the email
 		$email->recipient = $recipient;
@@ -113,7 +112,7 @@ class NewsletterEmailProcess extends BatchProcess {
 			$recipient->Result = 'Failed';
 			$recipient->write();
 		}
-		
+
 		// Adding a pause between email sending can be useful for debugging purposes
 		// sleep(10);
 	}
@@ -121,7 +120,7 @@ class NewsletterEmailProcess extends BatchProcess {
 	function complete() {
 		parent::complete();
 
-		$resent = ($this->newsletter->SentDate) ? true : false; 
+		$resent = ($this->newsletter->SentDate) ? true : false;
 
 		$this->newsletter->SentDate = 'now';
 		$this->newsletter->Status = 'Send';

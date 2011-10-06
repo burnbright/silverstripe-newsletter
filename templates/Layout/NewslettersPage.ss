@@ -1,4 +1,5 @@
-<h1>$Title</h1>
+<div class="typography">
+<h1 class="pagetitle">$Title</h1>
 $Content
 <% if Newsletters %>
 	<ul>
@@ -8,3 +9,4 @@ $Content
 	</ul>
 <% end_if %>
 $Form
+</div>

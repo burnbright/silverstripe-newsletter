@@ -8,16 +8,16 @@
 
 class NewsletterAdmin extends LeftAndMain {
 	static $subitem_class = 'Member';
-	
-	/** 
-	 * @var which will be used to seperator "send items" into 2 groups, e.g. "most recent number 5", "older". 
+
+	/**
+	 * @var which will be used to seperator "send items" into 2 groups, e.g. "most recent number 5", "older".
 	 */
 	static $most_recent_seperator = 5; // an int which will be used to seperator "send items" into 2 groups, e.g. "most recent number 5", "older".
-	
-	/** 
-	 * @var array Array of template paths to check 
+
+	/**
+	 * @var array Array of template paths to check
 	 */
-	static $template_paths = null; //could be customised in _config 
+	static $template_paths = null; //could be customised in _config
 
 	static $allowed_actions = array(
 		'adddraft',
@@ -59,17 +59,17 @@ class NewsletterAdmin extends LeftAndMain {
 		// In LeftAndMain::init() the current theme is unset.
 		// we need to restore the current theme here for make the dropdown of template list.
 		$theme = SSViewer::current_theme();
-		
+
 		parent::init();
-		
+
 		if(isset($theme) && $theme){
 			SSViewer::set_theme($theme);
 		}
-		
+
 		Requirements::javascript(MCE_ROOT . 'tiny_mce_src.js');
 		Requirements::javascript(SAPPHIRE_DIR . '/javascript/tiny_mce_improvements.js');
 
-		//TODO what is going on here? where did that hover.js go? can't find it. 
+		//TODO what is going on here? where did that hover.js go? can't find it.
 		//TODO We need to reimplement a hover.js?
 		Requirements::javascript(CMS_DIR . '/javascript/hover.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/scriptaculous/controls.js');
@@ -77,7 +77,7 @@ class NewsletterAdmin extends LeftAndMain {
 		Requirements::javascript(CMS_DIR . '/javascript/LeftAndMain_left.js');
 		Requirements::javascript(CMS_DIR . '/javascript/LeftAndMain_right.js');
 		Requirements::javascript(CMS_DIR . '/javascript/CMSMain_left.js');
-		
+
 		Requirements::javascript(CMS_DIR . '/javascript/SecurityAdmin.js');
 
 		Requirements::javascript(NEWSLETTER_DIR . '/javascript/NewsletterAdmin_left.js');
@@ -95,7 +95,7 @@ class NewsletterAdmin extends LeftAndMain {
 		Requirements::block(SAPPHIRE_DIR . '/javascript/HtmlEditorField.js');
 
 		Requirements::css(NEWSLETTER_DIR . '/css/NewsletterAdmin.css');
-		
+
 		//needed for displaying sent status report properly
 		Requirements::css(SAPPHIRE_DIR.'/css/ComplexTableField.css');
 		Requirements::css(SAPPHIRE_DIR.'/css/TableListField.css');
@@ -175,8 +175,8 @@ class NewsletterAdmin extends LeftAndMain {
 		// Block stylesheets and JS that are not required (email templates should have inline CSS/JS)
 		Requirements::clear();
 
-		$email = new NewsletterEmail($newsletter); 
-		
+		$email = new NewsletterEmail($newsletter);
+
 		return HTTP::absoluteURLs($email->getData()->renderWith($templateName));
 	}
 
@@ -186,7 +186,7 @@ class NewsletterAdmin extends LeftAndMain {
 	 */
 	public function showmailtype($params) {
 		$params = $params->allParams();
-		
+
 		return $this->showWithEditForm( $params, $this->getNewsletterTypeEditForm( $params['ID'] ) );
 	}
 
@@ -260,7 +260,7 @@ class NewsletterAdmin extends LeftAndMain {
     public function EditForm() {
 		// Include JavaScript to ensure HtmlEditorField works.
 		HtmlEditorField::include_js();
-		
+
     	if((isset($_REQUEST['ID']) && isset($_REQUEST['Type']) && $_REQUEST['Type'] == 'Newsletter') || isset($_REQUEST['action_savenewsletter'])) {
     		$form = $this->NewsletterEditForm();
     	} else {
@@ -440,7 +440,7 @@ class NewsletterAdmin extends LeftAndMain {
 	 */
 	function getsentstatusreport($params) {
 		$params = $params->allParams();
-		
+
 		if(Director::is_ajax()) {
 			$newsletter = DataObject::get_by_id( 'Newsletter', $params['ID'] );
 			$sent_status_report = $newsletter->renderWith("Newsletter_SentStatusReport");
@@ -460,9 +460,9 @@ class NewsletterAdmin extends LeftAndMain {
 		if(self::$template_path) return self::$template_path;
 		else return self::$template_path = project() . '/templates/email';
 	}
-	
+
 	/**
-	 * looked-up the email template_paths. 
+	 * looked-up the email template_paths.
 	 * if not set, will look up both theme folder and project folder
 	 * in both cases, email folder exsits or Email folder exists
 	 * return an array containing all folders pointing to the bunch of email templates
@@ -474,15 +474,15 @@ class NewsletterAdmin extends LeftAndMain {
 			if(file_exists("../".THEMES_DIR."/".SSViewer::current_theme()."/templates/email")){
 				self::$template_paths[] = THEMES_DIR."/".SSViewer::current_theme()."/templates/email";
 			}
-			
+
 			if(file_exists("../".THEMES_DIR."/".SSViewer::current_theme()."/templates/Email")){
 				self::$template_paths[] = THEMES_DIR."/".SSViewer::current_theme()."/templates/Email";
 			}
-			
+
 			if(file_exists("../".project() . '/templates/email')){
 				self::$template_paths[] = project() . '/templates/email';
 			}
-			
+
 			if(file_exists("../".project() . '/templates/Email')){
 				self::$template_paths[] = project() . '/templates/Email';
 			}
@@ -492,12 +492,12 @@ class NewsletterAdmin extends LeftAndMain {
 				self::$template_paths = array(self::$template_paths);
 			}
 		}
-		
+
 		return self::$template_paths;
 	}
-	
+
 	/**
-	 * return array containing all possible email templates file name 
+	 * return array containing all possible email templates file name
 	 * under the folders of both theme and project specific folder.
 	 *
 	 * @return array
@@ -510,7 +510,7 @@ class NewsletterAdmin extends LeftAndMain {
 			$absPath = Director::baseFolder();
 			if( $absPath{strlen($absPath)-1} != "/" )
 				$absPath .= "/";
-				
+
 			foreach($paths as $path){
 				$path = $absPath.$path;
 				if(is_dir($path)) {
@@ -520,14 +520,14 @@ class NewsletterAdmin extends LeftAndMain {
 					while(($templateFile = readdir($templateDir)) !== false) {
 						// *.ss files are templates
 						if( preg_match( '/(.*)\.ss$/', $templateFile, $match )){
-							// change a 
+							// change a
 							$templates[$match[1]] = preg_replace('/_?([A-Z])/', " $1", $match[1]);
 						}
 					}
 				}
 			}
 		}
-		
+
 		return $templates;
 	}
 
@@ -556,7 +556,7 @@ class NewsletterAdmin extends LeftAndMain {
 				$actions->push(new FormAction('send',_t('NewsletterAdmin.RESEND','Resend')));
 			else
 				$actions->push(new FormAction('send',_t('NewsletterAdmin.SEND','Send...')));
-			
+
 			$actions->push(new FormAction('save',_t('NewsletterAdmin.SAVE', 'Save')));
 
 			$form = new Form($this, "NewsletterEditForm", $fields, $actions);
@@ -569,7 +569,7 @@ class NewsletterAdmin extends LeftAndMain {
 					$cf->addExtraClass('typography');
 					$cf->addExtraClass('mceContentBody');
 				}
-				
+
 				$readonlyFields = $form->Fields()->makeReadonly();
 				$form->setFields($readonlyFields);
 			}
@@ -588,7 +588,7 @@ class NewsletterAdmin extends LeftAndMain {
 	}
 
 	/**
-	 * Sends a newsletter given by the url 
+	 * Sends a newsletter given by the url
 	 */
 	public function sendnewsletter() {
 
@@ -601,25 +601,21 @@ class NewsletterAdmin extends LeftAndMain {
 
 		$newsletter = DataObject::get_by_id("Newsletter", $id);
 		$nlType = $newsletter->getNewsletterType();
-
-		$e = new NewsletterEmail($newsletter, $nlType);
-		$e->Subject = $subject = $newsletter->Subject;
-
-		// TODO Make this dynamic
-
-		if( $nlType && $nlType->FromEmail )
-			$e->From = $from = $nlType->FromEmail;
-		else
-			$e->From = $from = Email::getAdminEmail();
-
-		if(isset($_REQUEST['TestEmail'])) $e->To = $_REQUEST['TestEmail'];
-		$e->setTemplate( $nlType->Template );
-
 		$messageID = base64_encode( $newsletter->ID . '_' . date( 'd-m-Y H:i:s' ) );
+
+		$from = ( $nlType && $nlType->FromEmail ) ? $nlType->FromEmail : Email::getAdminEmail();
+		$subject = $newsletter->Subject;
 
 		switch($_REQUEST['SendType']) {
 			case "Test":
 				if($_REQUEST['TestEmail']) {
+
+					$e = new NewsletterEmail($newsletter, $nlType);
+					$e->Subject = $subject;
+					$e->From = $from;
+
+					if(isset($_REQUEST['TestEmail'])) $e->To = $_REQUEST['TestEmail'];
+					$e->setTemplate( $nlType->Template );
 					$e->To = $_REQUEST['TestEmail'];
 					$e->setTemplate( $nlType->Template );
 
@@ -632,19 +628,19 @@ class NewsletterAdmin extends LeftAndMain {
 			case "List":
 				// Send to the entire mailing list.
 				$groupID = $nlType->GroupID;
-				
+
 				if(defined('DB::USE_ANSI_SQL')) {
 					$members = DataObject::get( 'Member', "\"GroupID\"='$groupID'", null, "INNER JOIN \"Group_Members\" ON \"MemberID\"=\"Member\".\"ID\"" );
 				} else {
 					$members = DataObject::get( 'Member', "`GroupID`='$groupID'", null, "INNER JOIN `Group_Members` ON `MemberID`=`Member`.`ID`" );
 				}
-				
+
 				echo self::sendToList($subject, $from, $newsletter, $nlType, $messageID, $members);
 				break;
 			case "Unsent":
 				// Send to only those who have not already been sent this newsletter.
 				$only_to_unsent = 1;
-      		
+
 				echo self::sendToList( $subject, $from, $newsletter, $nlType, $messageID, $newsletter->UnsentSubscribers());
 				break;
 		}
@@ -660,7 +656,7 @@ class NewsletterAdmin extends LeftAndMain {
 
 	static function sendToList($subject, $from, $newsletter, $nlType, $messageID = null, $recipients) {
 		$emailProcess = new NewsletterEmailProcess($subject, $from, $newsletter, $nlType, $messageID, $recipients);
-		
+
 		return $emailProcess->start();
 	}
 
