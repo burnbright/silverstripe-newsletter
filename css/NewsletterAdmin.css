@@ -38,3 +38,39 @@ table.ReportField {
 	table.ReportField tr {
 		border-bottom: solid 1px #82C0FF;
 	}
+
+	
+/**
+ * Analytics and Reports
+ */
+
+table.CMSList{
+	
+}
+	table.CMSList tr.Actioned td{background:#e5ffec;}
+		table.CMSList tr.Actioned td.status{}
+	table.CMSList tr.Opened td{background:#fffee5;}
+	table.CMSList tr.Bounced td{background:#ffedfe;}
+	table.CMSList tr.Sent td{}
+	table.CMSList tr.Failed td{background:#ffe5e5;}
+	table.CMSList tr.Blacklisted td{background:#f5edff;}
+		
+		table.CMSList tr td.agent div.relative{
+			position:relative;
+		}
+		table.CMSList tr td.agent .popout{
+			display:none;
+			font-size:8px;
+			width:300px;
+			background:#fff;
+			padding:2px;
+			border:1px solid black;
+		}
+		table.CMSList tr:hover td.agent .popout{
+			display:block;
+			position:absolute;
+			top:0;
+			right:0;
+			z-index:50;
+		}
+	
