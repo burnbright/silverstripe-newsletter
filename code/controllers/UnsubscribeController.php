@@ -17,7 +17,7 @@ class UnsubscribeController extends Page_Controller {
 	function RelativeLink($action = null) {
 		return self::$url_segment."/$action";
 	}
-	
+
 	private function getMember(){
 		$autoLoginHash = Convert::raw2sql($this->urlParams['AutoLoginHash']);
 		if($autoLoginHash) {
@@ -25,7 +25,7 @@ class UnsubscribeController extends Page_Controller {
 			return $member;
 		}
 	}
-	
+
 	private function getMailingList(){
 		$mailingListID = (int)$this->urlParams['MailingList'];
 
@@ -37,7 +37,7 @@ class UnsubscribeController extends Page_Controller {
 			};
 		}
 	}
-	
+
 	function index() {
 		Session::clear("loggedInAs");
 		Requirements::themedCSS("form");
@@ -65,7 +65,7 @@ class UnsubscribeController extends Page_Controller {
 
 	function done() {
 		$form = new Form($this, "UnsubscribeSuccess", new FieldSet(), new FieldSet);
-		
+
 		if(!self::$done_message){
 			$email = $this->getMember()->Email;
 			$mailingList = $this->getMailingList();
@@ -88,7 +88,7 @@ class UnsubscribeController extends Page_Controller {
 
 	function linksent(){
 		$form = new Form($this, "UnsubscribeLinkSent", new FieldSet(), new FieldSet);
-		
+
 		if(isset($_GET['SendEmail']) && $_GET['SendEmail']){
 			$form -> setMessage(sprintf(_t('Unsubscribe.LINKSENTTO', "The unsubscribe link has been sent to %s"), $_GET['SendEmail']), "good");
 			return $this->customise(array(
@@ -120,7 +120,7 @@ class UnsubscribeController extends Page_Controller {
 	function EmailAddressForm() {
 		return new Unsubscribe_EmailAddressForm( $this, 'EmailAddressForm' );
 	}
-	
+
     /**
     * Show the lists for the user with the given email address
     */
@@ -141,17 +141,15 @@ class UnsubscribeController extends Page_Controller {
 				}
 				$link = Director::absoluteBaseURL() . $this->RelativeLink('index') ."/" . $member->AutoLoginHash;
 				$membername = $member->getName();
-				$body = $this->customise(array(
-		    		'Content' => <<<HTML
+				$body = <<<HTML
 Dear $membername,<br />
 <p>Please click the link below to unsubscribe from our newsletters<br />
-$link<br />
+<a href="$link">$link</a><br />
 <br >
 <br >
 Thanks
 </p>
-HTML
-		    	))->renderWith('Page');
+HTML;
 				$email = new Email($from, $to, $subject, $body);
 				$result = $email -> send();
 				if($result){
@@ -172,7 +170,7 @@ HTML
 			Director::redirectBack();
 		}
 	}
-	
+
     /**
     * Unsubscribe the user from the given lists.
     */
