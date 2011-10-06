@@ -1,0 +1,57 @@
+Open tracking
+
+Allow users to add a reason for unsubscribing.
+
+Allow varying granularity of stats recording. Eg: you could record just the number of clicks, opens etc, or exactly who opens etc.
+Some site owners may not want analytics at all.
+Also Track: forwards, forwarded opens, last open date
+To track opens, first make use of image method, but fallback on clicks. Include unsubscribe link clicks.
+Hook into google analytics event tracking?
+
+Track clicks that occur without 'open' ...which implies text-based browser, or not enabling images in client.
+
+Could interact with different SMTP servers to spread the load??
+
+Track views / clicks on front-end newsletter page.
+Add 'view this newsletter online' link to default template.
+
+Ability for admin to unsubscribe and re-subscribe recipients.
+
+Only show bounces if bounce tracking has been set up/ enabled.
+
+Archive stats when they get too large
+
+Check that text-based emails are working..
+
+Make use of the browser capabilities module to provide human-readable info on browsers.
+http://php.net/manual/en/function.get-browser.php
+http://browsers.garykeith.com/downloads.asp
+https://github.com/garetjax/phpbrowscap
+... make sure email client type isn't lost if recipient clicks a link.
+
+Remove reliance on third-party javascript form validation
+
+Improve design of analtyics / reports.
+
+Improve permissions for front-end newsletter viewing. Allow either nobody, everybody, or only recipients.
+
+Don't create new sent records on a newsletter re-send.
+
+Custom name placement in newsletter content.
+
+Allow changing order of status report.
+
+Move link to database conversion to a once-called function to speed up email sending performance.
+Convert all links once, and then go through again later to add individual recipient info.
+
+Known bug: if you have an image on your page, and a link with the same url, the image src will get replaced also, breaking the image.
+The same goes if you have the same link displaying within some content. eg: <a href="mylink.com">mylink.com</a>
+
+Ability to copy a newsletter (ie content and subject) to a new draft.
+
+Graph reports: opens line graph, pie chart of opens,clicks, etc
+
+Unit tests
+
+
+Newsletter courses add-on. Ability to send out a sequence of newsletters to a recipient. 
