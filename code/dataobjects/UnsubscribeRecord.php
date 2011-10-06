@@ -8,32 +8,11 @@
  */
 class UnsubscribeRecord extends DataObject {
 
-	protected $from = '';
-	
-	protected $to = '$Email';
-	
-	protected $subject = '';
-	
-	protected $body = '';
-
 	static $has_one = array(
 		'NewsletterType' => 'NewsletterType',
+		//'Newsletter' => 'Newsletter', //keep a record of which newsletter caused unsubscription
 		'Member' => 'Member'
 	);
-
-	function __construct($record = null, $isSingleton = false) {
-		$this->subject = _t('Member.SUBJECTPASSWORDCHANGED');
-		
-		$this->body = '
-			<h1>' . _t('Member.EMAILPASSWORDINTRO', "Here's your new password") . '</h1>
-			<p>
-				<strong>' . _t('Member.EMAIL') . ':</strong> $Email<br />
-				<strong>' . _t('Member.PASSWORD') . ':</strong> $Password
-			</p>
-			<p>' . _t('Member.EMAILPASSWORDAPPENDIX', 'Your password has been changed. Please keep this email, for future reference.') . '</p>';
-
-		parent::__construct($record, $isSingleton);
-	}
 
 	/**
 	 * Migrate data from Member_UnsubscribeRecord (the obsolete table)

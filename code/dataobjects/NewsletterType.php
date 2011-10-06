@@ -71,7 +71,6 @@ class NewsletterType extends DataObject {
 				$newsletter->destroy();
 			}
 		}
-			
 		parent::delete();
 	}
 
@@ -96,7 +95,6 @@ class NewsletterType extends DataObject {
 		);
     	
 		$this->extend('updateCMSFields', $fields);
-		
 		return $fields;    	
 	}
 }
