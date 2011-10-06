@@ -28,6 +28,7 @@ class EmailTrackingController extends ContentController {
 	 * Records a link click.
 	 */
 	function track(){
+
 		if($params = $this->getURLParams()) {
 
 			//different link versions, for maintaining backwards compatability
@@ -86,13 +87,14 @@ class EmailTrackingController extends ContentController {
 		die(); //halt exection, and don't sent SS headers
 	}
 
-	static function generate_webbug_url($recipient){
+	static function generate_webbug_url($recipient = null){
 		$id = ($recipient) ? $recipient->ID: "";
 		return Director::absoluteURL(self::$url_segment."/open/$id",true);
 	}
 
-	static function generate_link_url($recipient,$linkhash){
-		return Director::absoluteURL(self::$url_segment."/track/".$linkhash."/".$recipient->ID,true);
+	static function generate_link_url($linkhash,$recipient = null){
+		$id = ($recipient) ? $recipient->ID: "";
+		return Director::absoluteURL(self::$url_segment."/track/".$linkhash."/".$id,true);
 	}
 
 	static function generate_hash($newsletter,$email,$link = null){

@@ -56,7 +56,6 @@ class TrackingLinksEmail extends Extension {
 
 					if(!$tracked) {
 						// make one.
-
 						$tracked = new Newsletter_TrackedLink();
 						$tracked->Original = $link;
 						$tracked->NewsletterID = $id;
@@ -64,7 +63,7 @@ class TrackingLinksEmail extends Extension {
 					}
 
 					// replace the link
-					$replacements[$link] = $tracked->Link();
+					$replacements['"'.$link.'"'] = '"'.$tracked->Link().'"';
 
 					// track that this link is still active
 					$current[] = $tracked->ID;
