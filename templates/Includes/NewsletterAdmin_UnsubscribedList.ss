@@ -1,14 +1,18 @@
 <% if Entries %>
 <table class="CMSList UnsubscribedList" summary="Unsubscribed users">
-    <tbody>
-        <tr>
-            <td><% _t('UNAME','User name') %></td>
-            <td><% _t('UNSUBON','Unsubscribed on') %></td>
+	<thead>
+		<tr>
+            <th><% _t('UNAME','User name') %></th>
+            <th><% _t('UNSUBON','Unsubscribed on') %></th>
+            <th></th>
         </tr>
+	</thead>
+    <tbody>
         <% control Entries %>
         <tr>
             <td>$Member.FirstName $Member.Surname</td>
-            <td>$Record.Created.Long</td>
+            <td>$Created.Long</td>
+            <td><a href="$ResubscribeLink"><% _t('RESUB','re-subscribe') %></a></td>
         </tr>
         <% end_control %>
     </tbody>
