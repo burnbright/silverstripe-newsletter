@@ -30,7 +30,7 @@ class TrackingLinksEmail extends Extension {
 	function storeLinks($email){
 		if(!$email->body || !$email->newsletter) return;
 
-		$text = $email->body->forTemplate();
+		$text = $email->body;
 
 		// find all the matches
 		if(preg_match_all("/<a\s[^>]*href=\"([^\"]*)\"[^>]*>(.*)<\/a>/siU", $text, $matches)) {

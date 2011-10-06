@@ -326,7 +326,7 @@ class Newsletter_TrackedLink extends DataObject {
 	 */
 	function Link() {
 		if(!$this->Hash) $this->write();
-		return EmailTrackingController::generate_link_url($this->Hash);
+		return EmailTrackingController::generate_link_url($this->Hash,$this->recipient);
 	}
 
 	/**
