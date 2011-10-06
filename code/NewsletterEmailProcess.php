@@ -98,17 +98,22 @@ class NewsletterEmailProcess extends BatchProcess {
 	 */
 	private function sendToAddress( $email, $address, $messageID = null, $member) {
 		$email->setTo( $address );
-		$result = $email->send( $messageID );
+		
 		// Log result of the send
-		$newsletter = new Newsletter_SentRecipient();
-		$newsletter->Email = $address;
-		$newsletter->MemberID = $member->ID;
+		$recipient = new Newsletter_SentRecipient();
+		$recipient->Email = $address;
+		$recipient->MemberID = $member->ID;
+		$recipient->Result = 'Sent'; 
+		$recipient->ParentID = $this->newsletter->ID;
+		$recipient->write(); //save recipient before sending so that we can make use of the recipient data in the email
+		$email->recipient = $recipient;
+		$result = $email->send( $messageID );
+		if(!$result){
+			// If sending is a failure, update status;
+			$recipient->Result = 'Failed';
+			$recipient->write();
+		}
 		
-		// If sending is successful
-		$newsletter->Result = ($result == true) ? 'Sent' : 'Failed'; 
-		
-		$newsletter->ParentID = $this->newsletter->ID;
-		$newsletter->write();
 		// Adding a pause between email sending can be useful for debugging purposes
 		// sleep(10);
 	}

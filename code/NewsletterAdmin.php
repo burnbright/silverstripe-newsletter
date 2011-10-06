@@ -95,6 +95,10 @@ class NewsletterAdmin extends LeftAndMain {
 		Requirements::block(SAPPHIRE_DIR . '/javascript/HtmlEditorField.js');
 
 		Requirements::css(NEWSLETTER_DIR . '/css/NewsletterAdmin.css');
+		
+		//needed for displaying sent status report properly
+		Requirements::css(SAPPHIRE_DIR.'/css/ComplexTableField.css');
+		Requirements::css(SAPPHIRE_DIR.'/css/TableListField.css');
 	}
 
 	public function remove() {
@@ -552,7 +556,7 @@ class NewsletterAdmin extends LeftAndMain {
 				$actions->push(new FormAction('send',_t('NewsletterAdmin.RESEND','Resend')));
 			else
 				$actions->push(new FormAction('send',_t('NewsletterAdmin.SEND','Send...')));
-
+			
 			$actions->push(new FormAction('save',_t('NewsletterAdmin.SAVE', 'Save')));
 
 			$form = new Form($this, "NewsletterEditForm", $fields, $actions);
@@ -561,6 +565,11 @@ class NewsletterAdmin extends LeftAndMain {
 			$form->setHTMLID('Form_EditForm');
 
 			if($email->Status != 'Draft') {
+				if($cf = $form->Fields()->fieldByName('Root.Content.Content')){
+					$cf->addExtraClass('typography');
+					$cf->addExtraClass('mceContentBody');
+				}
+				
 				$readonlyFields = $form->Fields()->makeReadonly();
 				$form->setFields($readonlyFields);
 			}
