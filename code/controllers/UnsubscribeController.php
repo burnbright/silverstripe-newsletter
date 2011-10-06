@@ -7,6 +7,7 @@
  */
 class UnsubscribeController extends Page_Controller {
 
+	static $url_segment = "unsubscribe";
 	public static $done_message;
 
 	function __construct($data = null) {
@@ -14,7 +15,7 @@ class UnsubscribeController extends Page_Controller {
 	}
 
 	function RelativeLink($action = null) {
-		return "unsubscribe/$action";
+		return self::$url_segment."/$action";
 	}
 	
 	private function getMember(){
@@ -37,7 +38,6 @@ class UnsubscribeController extends Page_Controller {
 		}
 	}
 	
-
 	function index() {
 		Session::clear("loggedInAs");
 		Requirements::themedCSS("form");
@@ -58,6 +58,7 @@ class UnsubscribeController extends Page_Controller {
 			$listForm = $this->EmailAddressForm();
 		}
 		return $this->customise(array(
+			'Title' => _t('Newsletter.UNSUBSCRIBE','Un-Subscribe'),
 			'Content' => $listForm->forTemplate()
 		))->renderWith('Page');
     }

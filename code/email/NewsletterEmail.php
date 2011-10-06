@@ -24,8 +24,8 @@ class NewsletterEmail extends Email {
 		$this->nlType = $type ? $type : $newsletter->getNewsletterType();
 		
 		parent::__construct();
-		
 		$this->body = $newsletter->getContentBody();
+		$this->subject = $newsletter->Subject;
 		
 		$this->populateTemplate(new ArrayData(array(
 			'Newsletter' => $this->Newsletter,
@@ -47,19 +47,28 @@ class NewsletterEmail extends Email {
 		$member=DataObject::get_one("Member", "Email = '".$emailAddr."'"); 
 		if($member){ 
 			if($member->AutoLoginHash){ 
-				$member->AutoLoginExpired = date('Y-m-d', time() + (86400 * 2)); 
+				$member->AutoLoginExpired = date('Y-m-d', time() + (86400 * 2)); //TODO: move this to a configuration variable
 				$member->write(); 
 			}else{ 
 				$member->generateAutologinHash(); 
 			} 
 			$nlTypeID = $this->nlType->ID; 
-			return Director::absoluteBaseURL() . "unsubscribe/index/".$member->AutoLoginHash."/$nlTypeID"; 
+			return Director::absoluteBaseURL() . UnsubscribeController::$url_segment."/index/".$member->AutoLoginHash."/$nlTypeID"; 
 		}else{
-			return Director::absoluteBaseURL() . "unsubscribe/index/";
+			return Director::absoluteBaseURL() . UnsubscribeController::$url_segment."/index/";
 		}
 	}
 	
 	function getData() {
-		return $this->template_data;
+		return $this->templateData();
 	}
+	
+	/**
+	 * Attach web bug to content before sending.
+	 */
+	function send($mid = null){
+		$this->extend('onBeforeSend',$this);
+		return parent::send($mid);
+	}
+	
 }
