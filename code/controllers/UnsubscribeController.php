@@ -141,17 +141,15 @@ class UnsubscribeController extends Page_Controller {
 				}
 				$link = Director::absoluteBaseURL() . $this->RelativeLink('index') ."/" . $member->AutoLoginHash;
 				$membername = $member->getName();
-				$body = $this->customise(array(
-		    		'Content' => <<<HTML
+				$body = <<<HTML
 Dear $membername,<br />
 <p>Please click the link below to unsubscribe from our newsletters<br />
-$link<br />
+<a href="$link">$link</a><br />
 <br >
 <br >
 Thanks
 </p>
-HTML
-		    	))->renderWith('GenericEmail');
+HTML;
 				$email = new Email($from, $to, $subject, $body);
 				$result = $email -> send();
 				if($result){
