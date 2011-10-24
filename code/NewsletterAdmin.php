@@ -538,21 +538,20 @@ class NewsletterAdmin extends LeftAndMain {
 	*/
 
 	public function getNewsletterEditForm($myId){
-		$email = DataObject::get_by_id("Newsletter", $myId);
-		if($email) {
-
-			$fields = $email->getCMSFields($this);
+		$newsletter = DataObject::get_by_id("Newsletter", $myId);
+		if($newsletter) {
+			$fields = $newsletter->getCMSFields($this);
 			$fields->push($idField = new HiddenField("ID"));
 			$idField->setValue($myId);
 			$fields->push($ParentidField = new HiddenField("ParentID"));
-			$ParentidField->setValue($email->ParentID);
+			$ParentidField->setValue($newsletter->ParentID);
 			$fields->push($typeField = new HiddenField("Type"));
 			$typeField->setValue('Newsletter');
 			//$fields->push(new HiddenField("executeForm", "", "EditForm") );
 
 			$actions = new FieldSet();
 
-			if( $email->SentDate )
+			if( $newsletter->SentDate )
 				$actions->push(new FormAction('send',_t('NewsletterAdmin.RESEND','Resend')));
 			else
 				$actions->push(new FormAction('send',_t('NewsletterAdmin.SEND','Send...')));
@@ -560,18 +559,24 @@ class NewsletterAdmin extends LeftAndMain {
 			$actions->push(new FormAction('save',_t('NewsletterAdmin.SAVE', 'Save')));
 
 			$form = new Form($this, "NewsletterEditForm", $fields, $actions);
-			$form->loadDataFrom($email);
+			$form->loadDataFrom($newsletter);
 			// This saves us from having to change all the JS in response to renaming this form to NewsletterEditForm
 			$form->setHTMLID('Form_EditForm');
 
-			if($email->Status != 'Draft') {
+			if($newsletter->Status != 'Draft') {
 				if($cf = $form->Fields()->fieldByName('Root.Content.Content')){
 					$cf->addExtraClass('typography');
 					$cf->addExtraClass('mceContentBody');
 				}
 
-				$readonlyFields = $form->Fields()->makeReadonly();
-				$form->setFields($readonlyFields);
+				//$readonlyFields = $form->Fields()->makeReadonly();
+				$fields = $form->Fields();
+
+				$fields->fieldByName("Root.Content")->removeByName("Content");
+				$subjectfield = $fields->fieldByName("Root.Content.Subject");
+				$readonlysubjectfield = $subjectfield->performReadonlyTransformation();
+
+				$fields->replaceField("Subject", $readonlysubjectfield);
 			}
 
 			// user_error( $form->FormAction(), E_USER_ERROR );

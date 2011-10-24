@@ -10,7 +10,9 @@ class Newsletter extends DataObject {
 		"Status" => "Enum('Draft, Send', 'Draft')",
 		"Content" => "HTMLText",
 		"Subject" => "Varchar(255)",
-		"SentDate" => "Datetime"
+		"SentDate" => "Datetime",
+
+		"ShowOnFront" => "Boolean"
 	);
 
 	static $has_one = array(
@@ -20,6 +22,10 @@ class Newsletter extends DataObject {
 	static $has_many = array(
 		"SentRecipients" => "Newsletter_SentRecipient",
 		"TrackedLinks" => "Newsletter_TrackedLink"
+	);
+
+	static $defaults = array(
+		"ShowOnFront" => false
 	);
 
 	/**
@@ -42,22 +48,22 @@ class Newsletter extends DataObject {
 					new TextField("Subject", _t('Newsletter.SUBJECT', 'Subject'), $this->Subject),
 					new HtmlEditorField("Content", _t('Newsletter.CONTENT', 'Content')),
 					new LiteralField('PreviewNewsletter', "<a href=\"$previewLink\" target=\"_blank\" class=\"action\">" . _t('EMAILPREVIEW', 'Email Preview') . "</a>"),
-					new LiteralField('FrontEndView',"<a target=\"blank\" href=\"".$this->Link()."\">"._t('PAGEPREVIEW','Page Preview')."</a>")
+					new LiteralField('FrontEndView',"<a target=\"blank\" href=\"".$this->Link()."\">"._t('PAGEPREVIEW','Page Preview')."</a>"),
+					new CheckboxField("ShowOnFront","Display this newsletter on the front-end.")
 				)
 			)
 		);
+
+		Requirements::javascript(NEWSLETTER_DIR.'/thirdparty/tinymce/legacyoutput.js');
 
 		if($this->Status != 'Draft') {
 			$roottabset->push($sentToTab = new Tab(_t('Newsletter.STATUSREPORT', 'Status Report'),
 				new LiteralField("SentStatusReport", $sentReport)
 			));
-
 			$roottabset->push($trackTab = new Tab(_t('Newsletter.ANALYTICS', 'Analytics'),
 				new LiteralField("TrackedLinks", $trackedLinks)
 			));
-
 			$mailTab->insertAfter( new ReadonlyField("SentDate", _t('Newsletter.SENTAT', 'Sent at'), $this->SentDate),'Subject');
-
 		}
 
 		$this->extend("updateCMSFields", $ret);

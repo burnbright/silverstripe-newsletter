@@ -22,7 +22,9 @@ class NewslettersPage_Controller extends Page_Controller{
 	}
 
 	function getNewsletters(){
-		return DataObject::get('Newsletter',"\"Status\" != 'Draft'");
+
+		$filter = "\"Status\" != 'Draft' AND \"ShowOnFront\" = 1";
+		return DataObject::get('Newsletter',$filter);
 	}
 
 	/**
