@@ -74,7 +74,8 @@ class Newsletter extends DataObject {
 	 * Only let recipients view newsletters by default.
 	 */
 	function canView($member = null){
-		if(Permission::check('ADMIN')) return true;
++		if(Permission::check('ADMIN') || $this->Parent()->CanViewType == "Anyone")
++			return true;
 		return($member && $member->inGroup($this->Parent()->GroupID));
 	}
 

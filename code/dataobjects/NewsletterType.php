@@ -13,7 +13,8 @@ class NewsletterType extends DataObject {
 		"Title" => "Varchar",
 		"Template" => "Varchar",
     	"FromEmail" => "Varchar(100)",
-    	"Sent" => "Datetime"
+    	"Sent" => "Datetime",
+		"CanViewType" => "Enum('Anyone, Recipients', 'Anyone')"
 	);
 	
 	static $has_one = array(
@@ -26,8 +27,9 @@ class NewsletterType extends DataObject {
 	);
 	
 	static $many_many = array();
-	
-	static $defaults = array();
+	static $defaults = array(
+		"CanViewType" => "Recipients"
+	);
 	
 	function DraftNewsletters() {
 		return DataObject::get("Newsletter","ParentID={$this->ID} AND Status ='Draft'");
@@ -80,9 +82,7 @@ class NewsletterType extends DataObject {
 	function getCMSFields() {
 		$groups = DataObject::get('Group', '', 'Sort');
 		$groupsMap = ($groups) ? $groups->map('ID', 'Title') : array();
-		
 		$templateSource = singleton("NewsletterAdmin")->templateSource();
-		
     	$fields = new FieldSet(
 			new TabSet("Root",
 				new Tab(_t('NewsletterAdmin.NLSETTINGS', 'Newsletter Settings'),
@@ -93,8 +93,7 @@ class NewsletterType extends DataObject {
 				)
 			)
 		);
-    	
 		$this->extend('updateCMSFields', $fields);
-		return $fields;    	
+		return $fields;
 	}
 }
