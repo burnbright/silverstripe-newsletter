@@ -34,7 +34,7 @@
 		</thead>
 		
 		<tbody>
-			<% control SentRecipients(Bounced) %>
+			<% control Recipients(Bounced) %>
 			<tr>
 				<td>$Email</td>
 				<td>$LastEdited</td>
@@ -111,7 +111,7 @@
 		</thead>
 		
 		<tbody>
-			<% control SentRecipients(Sent) %>
+			<% control Recipients(Sent) %>
 			<tr id="sent-member-$ID">
 				<% control Member %>
 				<td>$FirstName</td>

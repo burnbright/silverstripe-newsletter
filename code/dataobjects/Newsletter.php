@@ -87,7 +87,7 @@ class Newsletter extends DataObject {
 	 */
 	function Recipients($result,$extrafilter = null) {
 		$SQL_result = Convert::raw2sql($result);
-		$filter = array("ParentID='".$this->ID."'", "Result='".$SQL_result."'");
+		$filter = array("\"ParentID\"='".$this->ID."'", "\"Result\"='".$SQL_result."'");
 		if($extrafilter) $filter[] = $extrafilter;
 		return DataObject::get("Newsletter_SentRecipient",$filter);
 	}
@@ -99,7 +99,7 @@ class Newsletter extends DataObject {
 	 */
 	function UnsentSubscribers() {
 		// Get a list of everyone who has been sent this newsletter
-		$sent_recipients = DataObject::get("Newsletter_SentRecipient","ParentID='".$this->ID."'");
+		$sent_recipients = DataObject::get("Newsletter_SentRecipient","\"ParentID\"='".$this->ID."'");
 		// If this Newsletter has not been sent to anyone yet, $sent_recipients will be null
 		if ($sent_recipients != null) {
 			$sent_recipients_array = $sent_recipients->toNestedArray('MemberID');
