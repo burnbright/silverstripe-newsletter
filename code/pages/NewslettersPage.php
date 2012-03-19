@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Display newsletters on the front-end.
+ */
 class NewslettersPage extends Page{
 
 	static $has_one = array(
@@ -14,15 +17,13 @@ class NewslettersPage_Controller extends Page_Controller{
 	static $url_segment = 'newsletters';
 
 	function index(){
-
-		if(!$this->Title)
+		if(!$this->Title){
 			$this->Title = _t("NewslettersPage.NEWSLETTERs","Newsletters");
-
+		}
 		return array();
 	}
 
 	function getNewsletters(){
-
 		$filter = "\"Status\" != 'Draft' AND \"ShowOnFront\" = 1";
 		return DataObject::get('Newsletter',$filter);
 	}
@@ -31,11 +32,8 @@ class NewslettersPage_Controller extends Page_Controller{
 	 * Display an individual newsletter.
 	 */
 	function view(){
-
 		$id = Director::urlParam('ID');
-
 		if($newsletter = DataObject::get_by_id('Newsletter',$id)){
-
 			if($newsletter->canView(Member::currentUser())){
 				return array(
 					'Title' => $newsletter->Subject,
@@ -47,7 +45,6 @@ class NewslettersPage_Controller extends Page_Controller{
 				return;
 			}
 		}
-
 		return $this->httpError(404);
 	}
 

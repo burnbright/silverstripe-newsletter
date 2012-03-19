@@ -189,7 +189,7 @@ class SubscriptionPage_Controller extends Page_Controller {
 				new CheckboxSetField("NewsletterSelection","", $newsletters)
 			);
 			$formFields->push($newsletterSection);
-		}
+		}	
 		
 		$buttonTitle = $this->SubmissionButtonText;
 		$actions = new FieldSet(
@@ -197,6 +197,10 @@ class SubscriptionPage_Controller extends Page_Controller {
 		);
 		
 		$form = new Form($this, "Form", $formFields, $actions);
+		
+		if(class_exists('SpamProtectorManager')) {
+			SpamProtectorManager::update_form($form);
+		}
 		
 		// using jQuery to customise the validation of the form
 		$FormName = $form->FormName();
