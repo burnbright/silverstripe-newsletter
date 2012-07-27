@@ -54,6 +54,8 @@ class NewsletterAdmin extends LeftAndMain {
 	static $url_rule = '/$Action/$ID/$OtherID';
 
 	static $menu_title = 'Newsletter';
+	
+	static $menu_priority = 1;
 
 	public function init() {
 		// In LeftAndMain::init() the current theme is unset.
