@@ -21,7 +21,11 @@ class TrackingLinksEmail extends Extension {
 	 */
 	function onBeforeSend(&$email) {
 		//$this->addRecipientIdentifiers($email);
-		$email->body->setValue($email->body->getValue().$this->WebBug($email)); //add web bug for open tracking
+		if(is_object($email->body)){
+			$email->body->setValue($email->body->getValue().$this->WebBug($email)); //add web bug for open tracking
+		}elseif(is_string($email->body)){
+			$email->body.$this->WebBug($email);
+		}		
 	}
 
 	/**
